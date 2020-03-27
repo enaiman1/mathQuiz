@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl} from '@angular/forms'
+import { delay, filter } from 'rxjs/operators'
 import { MathValidators } from '../math-validators'
 
 @Component({
@@ -30,9 +31,16 @@ get num2(){
 }
 
   ngOnInit() {
-    this.mathForm.statusChanges.subscribe(value =>{
-      console.log(value);
-      
+    this.mathForm.statusChanges.pipe(
+      filter(value => value === 'VALID'),
+      delay(100)
+      ).subscribe(()=>{
+
+      this.mathForm.setValue({
+        num1: this.randomNumber(),
+        num2: this.randomNumber(),
+        answer: ""
+      })
     })
     
   }
